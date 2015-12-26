@@ -1,0 +1,107 @@
+// Queue : linked list implementation
+#include <iostream>
+using namespace std;
+
+struct QueueNode
+{
+	int value;
+	QueueNode * nextItem;
+};
+
+class Queue
+{
+	QueueNode *front, *rear;
+
+public:
+	Queue();
+	~Queue();
+	void Enqueue(int val);
+	void Dequeue();
+	int Front();
+	int Rear();
+	void Print();
+};
+
+Queue::Queue()
+{
+	this->front = nullptr;
+	this->rear = nullptr;
+}
+
+Queue::~Queue()
+{
+
+}
+
+void Queue::Enqueue(int val)
+{
+	QueueNode * node = new QueueNode();
+	node->value = val;
+	node->nextItem = nullptr;
+
+	if (front == nullptr)
+	{
+		front = rear = node;
+		return;
+	}
+
+	QueueNode * tmp = rear;
+	tmp->nextItem = node;
+	rear = node;
+}
+
+void Queue::Dequeue()
+{
+	if (front == nullptr)
+		return;
+
+	QueueNode * tmp = front->nextItem;
+	delete front;
+	front = tmp;
+
+	if (front == nullptr)
+		rear = nullptr;
+	return;
+}
+
+int Queue::Front()
+{
+	return this->front->value;
+}
+
+int Queue::Rear()
+{
+	return this->rear->value;
+}
+
+void Queue::Print()
+{
+	if (front == nullptr)
+		return;
+	QueueNode * tmp = front;
+	while (tmp != nullptr)
+	{
+		printf_s("%d , ", tmp->value);
+		tmp = tmp->nextItem;
+	} 
+
+	printf_s("\n");
+}
+
+// Driver program
+int main()
+{
+	Queue * queue = new Queue();
+
+	queue->Enqueue(5);
+	queue->Enqueue(10);
+	queue->Enqueue(15);
+	queue->Enqueue(20);
+
+	queue->Dequeue();
+	queue->Dequeue();
+
+	queue->Print();
+
+	return 0;
+}
