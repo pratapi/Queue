@@ -1,0 +1,147 @@
+// Construct Complete Binary Tree from its Linked List Representation
+#include <iostream>
+#include <queue>
+using namespace std;
+
+// Binary Tree
+struct TreeNode
+{
+    int data;
+    TreeNode * left;
+    TreeNode * right;
+};
+
+TreeNode * newBinaryTreeNode(int & value)
+{
+    TreeNode * node = new TreeNode;
+    node->data = value;
+    node->left = NULL;
+    node->right = NULL;
+
+    return node;
+}
+
+// Linked List
+struct Node
+{
+    int val;
+    Node * next;
+};
+
+class LinkedList
+{
+public:
+    LinkedList(Node * head);
+    virtual ~LinkedList();
+    Node * GetHead();
+    void Push(int val);
+    TreeNode * ConvertToBinaryTree();
+
+private:
+    Node * head;
+};
+
+LinkedList::LinkedList(Node * head = NULL) : head(head)
+{
+}
+
+LinkedList::~LinkedList()
+{
+}
+
+void LinkedList::Push(int val)
+{
+    Node * new_tmp = new Node;
+    new_tmp->val = val;
+    new_tmp->next = NULL;
+
+    if (head == NULL)
+    {
+        head = new_tmp;
+        return;
+    }
+
+    Node * tmp = head;
+    while (tmp->next != NULL)
+        tmp = tmp->next;
+
+    tmp->next = new_tmp;
+}
+
+TreeNode * LinkedList::ConvertToBinaryTree()
+{
+    // Queue t store Tree Node
+    queue<TreeNode *> qe;
+
+    TreeNode * bT = NULL;
+
+    // Base case
+    if (head == NULL)
+    {
+        return bT;
+    }
+
+    // first node is always a root node and queue it 
+    Node * tmp = this->head;
+    bT = newBinaryTreeNode(tmp->val);
+    qe.push(bT);
+
+    // advance to next pointer
+    tmp = tmp->next;
+
+    while (tmp)
+    {
+        TreeNode * node = qe.front();
+        qe.pop();
+
+        TreeNode * left = NULL, *right = NULL;
+        left = newBinaryTreeNode(tmp->val);
+        qe.push(left);
+        tmp = tmp->next;
+        if (tmp)
+        {
+            right = newBinaryTreeNode(tmp->val);
+            qe.push(right);
+            tmp = tmp->next;
+        }
+
+        node->left = left;
+        node->right = right;
+    }
+
+    return bT;
+}
+
+Node * LinkedList::GetHead()
+{
+    return head;
+}
+
+// Utility function to traverse the binary tree after conversion
+static void inorderTraversal(TreeNode* root)
+{
+    if (root)
+    {
+        inorderTraversal(root->left);
+        cout << root->data << " ";
+        inorderTraversal(root->right);
+    }
+}
+
+int main()
+{
+    LinkedList * LnkList = new LinkedList();
+    LnkList->Push(10);
+    LnkList->Push(12);
+    LnkList->Push(15);
+    LnkList->Push(25);
+    LnkList->Push(30);
+    LnkList->Push(36);
+
+    TreeNode * root = LnkList->ConvertToBinaryTree();
+
+    printf_s(" \n");
+    inorderTraversal(root);
+
+    return 0;
+} 
